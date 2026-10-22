@@ -13,7 +13,7 @@ Este proyecto simula un sistema automatizado de control de un invernadero median
 ## Resultados
 Tabla: tiempo de la Fase 1 y de la Fase 2
 Fase/Estrategia,    Descripción del Flujo,                                                          Tiempo Total de Ejecución
-Fase 1 (Secuencial),Ejecución síncrona mediante llamadas directas a .run() en un único hilo (main).,Ej: ~15.200 ms 
+Fase 1 (Secuenciarona mediante llamadas directas a .run() en un único hilo (main).,Ej: ~15.200 ms 
 Fase 2 (Concurrente),"Ejecución asíncrona mediante .start(), procesando todos los hilos en paralelo.",Ej: ~3.100 ms
 Conclusión: La ejecución concurrente reduce drásticamente el tiempo total de procesamiento al solapar los tiempos de espera (Thread.sleep) de los diferentes sensores y actuadores.
 ## Análisis
@@ -28,11 +28,17 @@ Experimento B (Concurrente - Fase 2): Permite comprobar la concurrencia real en 
 Experimento C (Vigilante / Demonio - Fase 4): Analiza el ciclo de vida de los hilos y el comportamiento de hilos de soporte en segundo plano. El uso de un hilo demonio garantiza que la aplicación principal no se quede bloqueada indefinidamente si un hilo auxiliar de supervisión queda a la escucha, permitiendo un apagado limpio y seguro del sistema.
 ### Estados observados (estado · cuándo · qué línea lo provoca)
 Tabla de Estados Observados del HiloDurante la monitorización en la Fase del Vigilante, los hilos atraviesan los siguientes estados del ciclo de vida de Java:
+
 Estado del Hilo      Descripción/Momento de Observación
+
 NEW                  Estado inmediatamente posterior a instanciar el hilo (new Thread(...)) antes de invocar .start().
+
 RUNNABLEEl           hilo está listo para ejecutarse o ejecutándose activamente en la CPU.
+
 TIMED_WAITINGEl      hilo se encuentra pausado temporalmente debido a la ejecución de un Thread.sleep(periodo).
+
 TERMINATEDEl         hilo ha finalizado la ejecución de su método run() de manera exitosa o por interrupción.
+
 ¿Por qué termina el programa si el vigilante sigue en su bucle?
 Motivo de finalización gracias al hilo Demonio
 Los hilos demonio (daemon threads) son servicios de soporte en segundo plano que no impiden que la JVM (Java Virtual Machine) finalice. Cuando todos los hilos de usuario principales (non-daemon) mueren, la máquina virtual se apaga automáticamente sin necesidad de esperar a que los hilos demonio terminen sus bucles infinitos de supervisión, evitando fugas de procesos colgados en el sistema operativo.
