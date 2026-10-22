@@ -38,13 +38,22 @@ Motivo de finalización gracias al hilo Demonio
 Los hilos demonio (daemon threads) son servicios de soporte en segundo plano que no impiden que la JVM (Java Virtual Machine) finalice. Cuando todos los hilos de usuario principales (non-daemon) mueren, la máquina virtual se apaga automáticamente sin necesidad de esperar a que los hilos demonio terminen sus bucles infinitos de supervisión, evitando fugas de procesos colgados en el sistema operativo.
 ### Thread frente a Runnable
 Tabla con al menos 4 aspectos
+
 Aspecto                  Thread(Extensión)                                                                                          Runnable(Implementación)
+
 Representación           La propia clase es un hilo de ejecución.                                                                   Representa únicamente una tarea ejecutable que se le asigna a un hilo.
+
 Forma de arranque        Se instancia el objeto y se invoca directamente hilo.start().                                              Requiere envolver la tarea en un objeto Thread: new Thread(tareaRunnable).start().
+
 Obtención de nombre      Se accede directamente mediante getName().                                                                 Se obtiene de forma indirecta consultando el hilo actual: Thread.currentThread().getName().
+
 Herencia y Reutilización Inflexible: Al extender Thread, la clase no puede heredar de ninguna otra clase en Java (herencia simple). Muy flexible: Permite que la clase extienda de otra superclase si fuera necesario, separando datos/lógica de la ejecución.
+
 ¿Por qué los sensores SOLO pueden ser Runnable en tu diseño?
+
 Porque conceptualmente un sensor es un modelo de datos con lógica de negocio propia (lecturas, umbrales, estadísticas) que puede ser ejecutado como tarea concurrente. 
 Implementar Runnable nos permite mantener una clase abstracta (Sensor) que centraliza toda la estadística común, dejando libertad a las subclases para heredar de otras estructuras en el futuro si el diseño lo exigiera, además de aplicar el principio de separación de responsabilidades (la tarea vs. el mecanismo del hilo).
+
 ¿Qué forma elegirías para el riego y por qué?
+
 Porque el programador de riego actúa como un actuador autónomo y específico del sistema con su propio ciclo de vida e hilo dedicado (la entidad es físicamente un proceso de control concurrente con un nombre fijo y obligatorio "riego" definido en su propio constructor mediante super("riego")).
